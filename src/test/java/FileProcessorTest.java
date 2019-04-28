@@ -3,7 +3,6 @@ import com.mobiquityinc.exception.APIException;
 import com.mobiquityinc.processor.FileProcessor;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,6 +35,20 @@ public class FileProcessorTest {
         Assert.assertEquals(packs.get(0).getItems().get(0).getIndexNumber(), 1);
         Assert.assertEquals(packs.get(0).getItems().get(0).getWeight(), new BigDecimal("85.31"));
         Assert.assertEquals(packs.get(0).getItems().get(0).getCost(), new BigDecimal("29"));
+    }
+
+    @Test(expected = APIException.class)
+    public void maxNumberOfItemsExceeded() throws IOException {
+        String input = "100 : (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29)" +
+                "(1,15,€29) (1,15,€29) (1,15,€29) (1,15,€29)";
+        Path testFile = Files.write(Paths.get(TEST_FILE_PATH), input.getBytes());
+
+        try {
+            FileProcessor.getInstance().processFile(testFile.toString());
+        } catch (APIException api) {
+            Assert.assertTrue(api.getMessage().contains("Total number of items 17 exceeds the maximum of 15"));
+            throw api;
+        }
     }
 
     @Test(expected = APIException.class)

@@ -84,11 +84,12 @@ public class FileProcessor {
             // Match all values between all parenthesis for the line
             Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(line);
             packageItems = new ArrayList<>();
-
             while (m.find()) {
                 String[] lineItems = m.group(1).split("\\,");
                 packageItems.add(new Item(Integer.valueOf(lineItems[0]), validateItemWeight(lineItems), validateItemCost(lineItems)));
             }
+
+            validateNumberOfItems(packageItems.size());
         } catch (APIException apiException) {
             throw new APIException(String.format("Invalid line [%s] - %s", line, apiException.getMessage()));
         }
@@ -157,10 +158,10 @@ public class FileProcessor {
     /**
      * @param value
      */
-    private void validateNumberOfItems(String value) {
+    private void validateNumberOfItems(int value) {
 
-        if (value.length() > MAX_PACKAGE_NUMBER_OF_ITEMS) {
-            throw new APIException(String.format("Total number of items %s exceeds the maximum of %s", value.length(), MAX_PACKAGE_NUMBER_OF_ITEMS));
+        if (value > MAX_PACKAGE_NUMBER_OF_ITEMS) {
+            throw new APIException(String.format("Total number of items %s exceeds the maximum of %s", value, MAX_PACKAGE_NUMBER_OF_ITEMS));
         }
     }
 
