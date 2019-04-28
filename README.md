@@ -1,4 +1,13 @@
 # Assignment: Package Challenge
+
+## How to use
+
+This project can be used as a library, you can run the maven command below to create a jar that can be used in your project.
+
+```
+mvn clean test package
+```
+
 ## Introduction
 
 You want to send your friend a package with different things.
